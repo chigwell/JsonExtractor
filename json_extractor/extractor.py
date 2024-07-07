@@ -7,19 +7,20 @@ class JsonExtractor:
         start_index = None
 
         for i, char in enumerate(input_str):
-            if char == '{':
+            if char == '{' or char == '[':
                 stack.append(char)
                 if len(stack) == 1:
-                    # Mark the start of a potential JSON object
+                    # Mark the start of a potential JSON object or array
                     start_index = i
-            elif char == '}':
+            elif char == '}' or char == ']':
                 if stack:
-                    stack.pop()
+                    if (char == '}' and stack[-1] == '{') or (char == ']' and stack[-1] == '['):
+                        stack.pop()
                     if len(stack) == 0 and start_index is not None:
-                        # Attempt to parse when we find a closing brace that matches the outermost opening brace
+                        # Attempt to parse when we find a closing brace or bracket that matches the outermost opening brace or bracket
                         try:
-                            json_obj = json.loads(input_str[start_index:i+1])
-                            return json_obj  # Return the first successfully parsed JSON object
+                            json_obj = json.loads(input_str[start_index:i + 1])
+                            return json_obj  # Return the first successfully parsed JSON object or array
                         except json.JSONDecodeError:
                             # Reset start_index if parsing fails
                             start_index = None
