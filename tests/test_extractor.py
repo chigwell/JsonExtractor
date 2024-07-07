@@ -30,6 +30,12 @@ class TestJsonExtractor(unittest.TestCase):
             }
             ```
             """, {"json": "object"}),
+            ('```json[\n {"key": "value1"}, {"key": "value2"} \n]```',
+             [{"key": "value1"}, {"key": "value2"}]),
+            ('Some text\n```json[\n{"json": "object1"},\n{"json": "object2"}\n]``` more text',
+             [{"json": "object1"}, {"json": "object2"}]),
+            ('Array with nested objects\n```json[\n {"key": {"nested_key": "nested_value"}}, {"key": "value2"} \n]```',
+             [{"key": {"nested_key": "nested_value"}}, {"key": "value2"}]),
         ]
 
         for input_str, expected in test_cases:
