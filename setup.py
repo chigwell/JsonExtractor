@@ -11,7 +11,7 @@ setup(
     url='https://github.com/chigwell/JsonExtractor',
     packages=find_packages(),
     install_requires=[
-        'regex',
+        'regex','ujson',
     ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
