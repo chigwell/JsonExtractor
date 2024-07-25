@@ -1,4 +1,5 @@
-import json
+import ujson as json
+
 
 class JsonExtractor:
     @staticmethod
@@ -7,23 +8,20 @@ class JsonExtractor:
         start_index = None
 
         for i, char in enumerate(input_str):
-            if char == '{' or char == '[':
+            if char in "{[":
                 stack.append(char)
                 if len(stack) == 1:
-                    # Mark the start of a potential JSON object or array
                     start_index = i
-            elif char == '}' or char == ']':
-                if stack:
-                    if (char == '}' and stack[-1] == '{') or (char == ']' and stack[-1] == '['):
-                        stack.pop()
-                    if len(stack) == 0 and start_index is not None:
-                        # Attempt to parse when we find a closing brace or bracket that matches the outermost opening brace or bracket
+            elif char in "}]":
+                if stack and (
+                    (char == "}" and stack[-1] == "{")
+                    or (char == "]" and stack[-1] == "[")
+                ):
+                    stack.pop()
+                    if not stack and start_index is not None:
                         try:
-                            json_obj = json.loads(input_str[start_index:i + 1])
-                            return json_obj  # Return the first successfully parsed JSON object or array
+                            return json.loads(input_str[start_index : i + 1])
                         except json.JSONDecodeError:
-                            # Reset start_index if parsing fails
                             start_index = None
 
-        # If no valid JSON found
         return None
