@@ -42,5 +42,18 @@ class TestJsonExtractor(unittest.TestCase):
             result = JsonExtractor.extract_valid_json(input_str)
             self.assertEqual(result, expected, f"Failed for input: {input_str}")
 
+
+    def test_extract_all_valid_json(self):
+        test_cases = [
+            ('Response: some text\n {"resp": "valid"} and some text', [{"resp": "valid"}]),
+            ('Response: some text\n {"resp": "valid"} and some text\n {"resp": "valid2"}', [{"resp": "valid"}, {"resp": "valid2"}]),
+            ('Response: some text\n {"resp": "valid"} and some text\n {"resp": "valid2"} and some text', [{"resp": "valid"}, {"resp": "valid2"}]),
+            ('Response: some text\n with no valid json', []),
+        ]
+
+        for input_str, expected in test_cases:
+            result = JsonExtractor.extract_all_valid_json(input_str)
+            self.assertEqual(result, expected, f"Failed for input: {input_str}")
+
 if __name__ == '__main__':
     unittest.main()

@@ -35,9 +35,19 @@ else:
     print("No valid JSON found.")
 ```
 
+```python
+# Extract all valid JSON objects
+>>> input_string = 'Some text before JSON {"key": "value"} some text before second JSON. {"key": "value2"} the end'
+>>> JsonExtractor.extract_all_valid_json(input_string)
+[{'key': 'value'}, {'key': 'value2'}]
+>>> JsonExtractor.extract_valid_json("invalid")
+[]
+```
+
 ## Features
 
-- Extracts the first valid JSON object found in a given string.
+- Extracts the first valid JSON object found in a given string (`extract_valid_json`).
+- Extracts all valid JSON objects found in a given string (`extract_all_valid_json`).
 - Handles various formats, including JSON within markdown code blocks.
 
 ## Contributing

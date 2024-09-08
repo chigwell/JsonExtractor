@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='JsonExtractor',
-    version='0.0.2',
+    version='0.0.3',
     author='Eugene Evstafev',
     author_email='chigwel@gmail.com',
     description='A tool for extracting valid JSON from LLM responses',
