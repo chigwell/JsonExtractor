@@ -35,9 +35,24 @@ else:
     print("No valid JSON found.")
 ```
 
+For strings that may contain multiple JSON objects or arrays, use `batch_mode=True` to collect all valid top-level JSON values:
+
+```python
+input_string = 'First {"key": "value"} and second [{"other": 1}]'
+
+# Extract all valid JSON objects/arrays
+valid_json_list = JsonExtractor.extract_valid_json(input_string, batch_mode=True)
+
+if valid_json_list:
+    print("Extracted JSON items:", valid_json_list)
+else:
+    print("No valid JSON found.")
+```
+
 ## Features
 
-- Extracts the first valid JSON object found in a given string.
+- Extracts the first valid JSON object found in a given string by default.
+- Supports `batch_mode=True` to collect all valid top-level JSON objects/arrays.
 - Handles various formats, including JSON within markdown code blocks.
 
 ## Contributing

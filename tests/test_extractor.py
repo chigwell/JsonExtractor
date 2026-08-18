@@ -42,5 +42,33 @@ class TestJsonExtractor(unittest.TestCase):
             result = JsonExtractor.extract_valid_json(input_str)
             self.assertEqual(result, expected, f"Failed for input: {input_str}")
 
+    def test_extract_valid_json_batch_mode(self):
+        batch_test_cases = [
+            ('Text {"a":1} text [{"b":2}, 3]', [{"a": 1}, [{"b": 2}, 3]]),
+            ('{"a":1}{"b":2}', [{"a": 1}, {"b": 2}]),
+            ('No JSON here', []),
+            ('Some text {"x": "y"} and more {"z": 1}', [{"x": "y"}, {"z": 1}]),
+            ('``` {"key": "value"} ``` {"key2": "value2"}', [{"key": "value"}, {"key2": "value2"}]),
+            ('one {"a": 1} two {"b": 2} three {"c": 3}', [{"a": 1}, {"b": 2}, {"c": 3}]),
+            ('[{"a": 1}, {"b": 2}]', [[{"a": 1}, {"b": 2}]]),
+        ]
+        for input_str, expected in batch_test_cases:
+            result = JsonExtractor.extract_valid_json(input_str, batch_mode=True)
+            self.assertEqual(result, expected, f"Failed for input: {input_str}")
+
+    def test_extract_valid_json_default_ignores_batch(self):
+        input_str = 'Text {"a":1} text {"b":2}'
+        self.assertEqual(JsonExtractor.extract_valid_json(input_str), {"a": 1})
+        self.assertEqual(
+            JsonExtractor.extract_valid_json(input_str, batch_mode=False),
+            {"a": 1}
+        )
+
+    def test_extract_valid_json_large_batch_input(self):
+        input_str = 'log ' * 2000 + '{"a": 1}' + 'mid ' * 2000 + '{"b": 2}'
+        self.assertGreater(len(input_str), 10000)
+        result = JsonExtractor.extract_valid_json(input_str, batch_mode=True)
+        self.assertEqual(result, [{"a": 1}, {"b": 2}])
+
 if __name__ == '__main__':
     unittest.main()
